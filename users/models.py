@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser  # 사용자인증
+from django.contrib.auth.models import AbstractUser  # 사용자인증, 데이터베이스에 등록x
 from django.db import models
 
 # Create your models here.
@@ -38,3 +38,7 @@ class User(AbstractUser):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, blank=True)
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True)
     superhost = models.BooleanField(default=False)
+
+    def __str__(self):
+
+        return self.username
