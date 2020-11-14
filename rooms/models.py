@@ -56,9 +56,9 @@ class Photo(core_models.TimeStampedModel):
     """ Photo Model Definition """
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField()
+    file = models.ImageField(upload_to="room_photos")
     room = models.ForeignKey(
-        "Room", on_delete=models.CASCADE
+        "Room", related_name="photos", on_delete=models.CASCADE
     )  # 룸 연결 룸이지워졌을때 사진도 같이 지워져야하니까, 파이썬은 위에서 아래로 읽기때문에 Room 못읽을수잇음 스트링으로 쓰거나 밑으로 내리거나
 
     def __str__(self):
@@ -83,14 +83,14 @@ class Room(core_models.TimeStampedModel):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE
+        "users.User", related_name="rooms", on_delete=models.CASCADE
     )  # 다른모델이랑 연결시키기(오직 하나만)
     room_type = models.ForeignKey(
-        "RoomType", on_delete=models.SET_NULL, null=True
+        "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
     )  # manytomany 여러개 자식들 가질수있음
-    amenities = models.ManyToManyField("Amenity", blank=True)
-    facilities = models.ManyToManyField("Facility", blank=True)
-    house_rules = models.ManyToManyField("HouseRule", blank=True)
+    amenities = models.ManyToManyField("Amenity", related_name="rooms", blank=True)
+    facilities = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    house_rules = models.ManyToManyField("HouseRule", related_name="rooms", blank=True)
 
     def __str__(self):
         return self.name
